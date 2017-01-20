@@ -18,10 +18,10 @@ cli
 .option('-c, --concurrency [value]', 'concurrency for reindex', require('os').cpus().length)
 .option('-b, --bulk [value]', 'bulk size for a thread', 100)
 .option('-q, --query_size [value]', 'query size for scroll', 100)
+.option('-r, --search_body [value]', 'perform a partial extract based on search results', '')
 .option('-s, --scroll [value]', 'default 1m', '1m')
 .option('-o, --request_timeout [value]', 'default 60000', 60000)
 .option('-l, --log_path [value]', 'default ./reindex.log', './reindex.log')
-.option('-r, --trace', 'default false', false)
 .option('-n, --max_docs [value]', 'default -1 unlimited', -1)
 .option('-v, --api_ver [value]', 'default 1.5', '1.5')
 .option('-p, --parent [value]', 'if set, uses this field as parent field', '')
@@ -186,6 +186,10 @@ if (cluster.isMaster) {
 
   if (custom_indexer && custom_indexer.query) {
     scan_options.body = _.extend(scan_options.body, custom_indexer.query);
+  }
+
+  if (!_.isEmpty(cli.search_body)) {
+    scan_options.body = _.extend(scan_options.body, JSON.parse(cli.search_body));
   }
 
   var reindexer = new Indexer();
