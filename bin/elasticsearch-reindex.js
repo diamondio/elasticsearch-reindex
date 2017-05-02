@@ -157,6 +157,8 @@ if (cluster.isMaster) {
       host: res.host,
       requestTimeout: cli.request_timeout,
       apiVersion: cli.api_ver,
+      keepAlive: cli.keepAlive !== undefined ? cli.keepAlive : undefined,
+      maxSockets: cli.maxSockets !== undefined ? cli.maxSockets : undefined,
       suggestCompression: cli.compress
     });
     return res;
